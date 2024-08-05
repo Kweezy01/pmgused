@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model Post {
+    id        Int      @id @default(autoincrement())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([name])
+}
+
+model Vehicles {
+    StockNum      String           @id @unique
+    VIN           String           @unique
+    MMCode        Int
+    Odometer      Int
+    StandInValue  Int
+    InternetPrice Int
+    InternetState InternetStates[]
+    ReconState    ReconStates[]
+
+    createdAt DateTime @default(now())
+}
+
+model InternetStates {
+    InternetStateID Int      @id @default(autoincrement())
+    StockNum        String   @unique
+    Vehicle         Vehicles @relation(fields: [StockNum], references: [StockNum])
+    PicsTaken       Boolean  @default(false)
+    PicsOnPc        Boolean  @default(false)
+    OnAutoTrader    Boolean  @default(false)
+    OnCars          Boolean  @default(false)
+    OnPMGUsed       Boolean  @default(false)
+    OnWhatsapp      Boolean  @default(false)
+    OnPinnacle      Boolean  @default(false)
+
+    createdAt DateTime @default(now())
+}
+
+model ReconStates {
+    ReconID            Int       @id @default(autoincrement())
+    StockNum           String    @unique
+    Vehicle            Vehicles  @relation(fields: [StockNum], references: [StockNum])
+    WorkshopID         Int
+    WorkshopDate       DateTime
+    Workshop           Workshops @relation(fields: [WorkshopID], references: [WorkshopID])
+    PannelBeaterID     Int
+    PannelBeaterDate   DateTime
+    PannelBeater       PannelBeaters @relation(fields: [PannelBeaterID], references: [PannelBeaterID])
+    InteriorRepairerID Int
+    InteriorRepairDate DateTime
+    InteriorRepair           InteriorRepairers @relation(fields: [InteriorRepairerID], references: [InteriorRepairerID])
+    ValetID            Int
+    ValetDate          DateTime
+    Valet           Valets @relation(fields: [ValetID], references: [ValetID])
+    DateOnFloor        DateTime
+
+    createdAt DateTime @default(now())
+}
+
+model Workshops {
+    WorkshopID   Int    @id @default(autoincrement())
+    WorkshopName String @unique @db.VarChar(400)
+
+    ReconStates ReconStates[]
+}
+
+model PannelBeaters {
+    PannelBeaterID   Int           @id @default(autoincrement())
+    PannelBeaterName String        @unique @db.VarChar(400)
+
+    ReconStates      ReconStates[]
+}
+
+model InteriorRepairers {
+    InteriorRepairerID   Int           @id @default(autoincrement())
+    InteriorRepairerName String        @unique @db.VarChar(400)
+    ReconStates          ReconStates[]
+}
+
+model Valets {
+    ValetID     Int           @id @default(autoincrement())
+    ValetName   String        @unique @db.VarChar(400)
+    ReconStates ReconStates[]
+}
