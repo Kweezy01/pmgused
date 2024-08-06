@@ -30,7 +30,7 @@ export function VehicleTable() {
                     <div className="flex pl-1 pt-1 pb-1 border-b border-slate-400">
                         <nav>
                             <button>
-                                <Link href={"/"}>Home</Link>
+                                Dont Press Me
                             </button>
                         </nav>
                     </div>
