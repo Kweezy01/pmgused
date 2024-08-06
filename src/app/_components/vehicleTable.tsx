@@ -45,9 +45,12 @@ export function VehicleTable() {
                         </tr>
                         <tr className="bg-black bg-opacity-70 text-slate-300 font-bold ml-6 border-b">
                             {data.map((e) => {
-                                return (
-                                    <td key={e} className="text-center border-x">{e}</td>
-                                )
+                                e.map((i) => {
+                                        return (
+                                            <td key={i} className="text-center border-x">{i}</td>
+                                        )
+
+                                    })
                             })}
                         </tr>
                     </table>
