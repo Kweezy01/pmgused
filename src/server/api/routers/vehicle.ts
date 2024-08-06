@@ -33,4 +33,10 @@ export const vehicleRouter = createTRPCRouter({
 
     return vehicle ?? null;
   }),
+
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    const vehicle = await ctx.db.vehicles.findMany();
+
+    return vehicle ?? null;
+  }),
 });
