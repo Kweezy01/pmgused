@@ -44,14 +44,11 @@ export function VehicleTable() {
                             <td className="font-bold text-center border-b border-x bg-blue-500">Internet Price</td>
                         </tr>
                         <tr className="bg-black bg-opacity-70 text-slate-300 font-bold ml-6 border-b">
-                            {data.map((e) => {
-                                e.map((i) => {
-                                        return (
-                                            <td key={i} className="text-center border-x">{i}</td>
-                                        )
-
-                                    })
-                            })}
+                                {[data?.StockNum, data?.VIN, data?.MMCode, data?.Odometer, data?.StandInValue, data?.InternetPrice].map((e) => {
+                                    return (
+                                        <td key={e} className="text-center border-x">{e}</td>
+                                    )
+                                })}
                         </tr>
                     </table>
 {/* 
