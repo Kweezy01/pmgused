@@ -48,22 +48,22 @@ model InternetStates {
 }
 
 model ReconStates {
-    ReconID            Int       @id @default(autoincrement())
-    StockNum           String    @unique
-    Vehicle            Vehicles  @relation(fields: [StockNum], references: [StockNum])
-    WorkshopID         Int
-    WorkshopDate       DateTime
-    Workshop           Workshops @relation(fields: [WorkshopID], references: [WorkshopID])
-    PannelBeaterID     Int
-    PannelBeaterDate   DateTime
-    PannelBeater       PannelBeaters @relation(fields: [PannelBeaterID], references: [PannelBeaterID])
-    InteriorRepairerID Int
-    InteriorRepairDate DateTime
-    InteriorRepair           InteriorRepairers @relation(fields: [InteriorRepairerID], references: [InteriorRepairerID])
-    ValetID            Int
-    ValetDate          DateTime
-    Valet           Valets @relation(fields: [ValetID], references: [ValetID])
-    DateOnFloor        DateTime
+    ReconID             Int       @id @default(autoincrement())
+    StockNum            String    @unique
+    Vehicle             Vehicles  @relation(fields: [StockNum], references: [StockNum])
+    WorkshopID          Int?
+    WorkshopDate        DateTime?
+    Workshop            Workshops? @relation(fields: [WorkshopID], references: [WorkshopID])
+    PannelBeaterID      Int?
+    PannelBeaterDate    DateTime?
+    PannelBeater        PannelBeaters? @relation(fields: [PannelBeaterID], references: [PannelBeaterID])
+    InteriorRepairerID  Int?
+    InteriorRepairDate  DateTime?
+    InteriorRepair      InteriorRepairers? @relation(fields: [InteriorRepairerID], references: [InteriorRepairerID])
+    ValetID             Int?
+    ValetDate           DateTime?
+    Valet               Valets? @relation(fields: [ValetID], references: [ValetID])
+    DateOnFloor         DateTime?
 
     createdAt DateTime @default(now())
 }
