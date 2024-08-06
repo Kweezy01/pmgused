@@ -44,7 +44,7 @@ export function VehicleTable() {
                             <td className="font-bold text-center border-b border-x bg-blue-500">Internet Price</td>
                         </tr>
                         <tr className="bg-black bg-opacity-70 text-slate-300 font-bold ml-6 border-b">
-                            {[latestVehicle?.StockNum, latestVehicle?.VIN, latestVehicle?.MMcode, latestVehicle?.Odometer, latestVehicle?.StandinPrice, latestVehicle?.InternetPrice].map((e) => {
+                            {[latestVehicle?.StockNum, latestVehicle?.VIN, latestVehicle?.MMCode, latestVehicle?.Odometer, latestVehicle?.StandinPrice, latestVehicle?.InternetPrice].map((e) => {
                                 return (
                                     <td key={e} className="text-center border-x">{e}</td>
                                 )
