@@ -5,7 +5,7 @@ import { useState } from "react";
 import { api } from "~/trpc/react";
 
 export function VehicleTable() {
-    const { latestVehicle, isLoading } = api.vehicle.getAll.useQuery();
+    const { data, isLoading } = api.vehicle.getAll.useQuery();
 
     const utils = api.useUtils();
     const [stockNum, setStockNum] = useState("");
@@ -44,7 +44,7 @@ export function VehicleTable() {
                             <td className="font-bold text-center border-b border-x bg-blue-500">Internet Price</td>
                         </tr>
                         <tr className="bg-black bg-opacity-70 text-slate-300 font-bold ml-6 border-b">
-                            {[latestVehicle?.StockNum, latestVehicle?.VIN, latestVehicle?.MMCode, latestVehicle?.Odometer, latestVehicle?.StandInValue, latestVehicle?.InternetPrice].map((e) => {
+                            {[data?.StockNum, data?.VIN, data?.MMCode, data?.Odometer, data?.StandInValue, data?.InternetPrice].map((e) => {
                                 return (
                                     <td key={e} className="text-center border-x">{e}</td>
                                 )
