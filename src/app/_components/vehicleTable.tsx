@@ -5,7 +5,7 @@ import { useState } from "react";
 import { api } from "~/trpc/react";
 
 export function VehicleTable() {
-    const [latestVehicle] = api.vehicle.getAll.useQuery();
+    const { latestVehicle, isLoading } = api.vehicle.getAll.useQuery();
 
     const utils = api.useUtils();
     const [stockNum, setStockNum] = useState("");
