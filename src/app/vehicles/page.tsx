@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { api } from "~/trpc/react";
 
-export function VehicleTable() {
+export default function VehicleTable() {
     const { data, isLoading } = api.vehicle.getAll.useQuery();
 
     // const utils = api.useUtils();
@@ -23,7 +23,7 @@ export function VehicleTable() {
     // });
 
     return (
-        <div className="">
+        <div className="flex h-screen justify-center bg-neutral-600">
             {data ? (
                 <main className="flex bg-neutral-600 h-screen justify">
                     <div className="text-black border-x border-slate-400">
@@ -40,7 +40,7 @@ export function VehicleTable() {
                                 <button
                                     type="button"
                                     className="inline-block rounded bg-neutral-800 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-neutral-50 shadow-dark-3 transition duration-150 ease-in-out hover:bg-neutral-700 hover:shadow-dark-2 focus:bg-neutral-700 focus:shadow-dark-2 focus:outline-none focus:ring-0 active:bg-neutral-900 active:shadow-dark-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
-                                    <a href="/insertvehicle" className="px-6">Insert Vehicle</a>
+                                    <a href="/insertvehicle" className="px-6">Trade Centre Vehicles</a>
                                 </button>
                                 <button
                                     type="button"
