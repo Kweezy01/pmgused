@@ -26,20 +26,11 @@ export function InsertVehicle() {
     return (
         <main className="flex h-screen justify-center">
             <div className="text-black bg-contain bg-center w-full border-x border-slate-400 md:max-w-2xl">
-            <div className="flex pl-1 pt-1 pb-1 border-b border-slate-400">
-                            <nav className="w-full bg-neutral-600 relative">
-                                <button
-                                    type="button"
-                                    className="inline-block rounded bg-neutral-800 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-neutral-50 shadow-dark-3 transition duration-150 ease-in-out hover:bg-neutral-700 hover:shadow-dark-2 focus:bg-neutral-700 focus:shadow-dark-2 focus:outline-none focus:ring-0 active:bg-neutral-900 active:shadow-dark-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
-                                    <a href="/insertvehicle" className="px-6">Insert Vehicle</a>
-                                </button>
-                                <button
-                                    type="button"
-                                    className="inline-block rounded bg-neutral-800 px-6 pb-2 pt-2.5 text-xs absolute right-1  font-medium uppercase leading-normal text-neutral-50 shadow-dark-3 transition duration-150 ease-in-out hover:bg-neutral-700 hover:shadow-dark-2 focus:bg-neutral-700 focus:shadow-dark-2 focus:outline-none focus:ring-0 active:bg-neutral-900 active:shadow-dark-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
-                                    Delete Vehicle
-                                </button>
-                            </nav>
-                        </div>
+                <div className="flex pl-1 pt-1 pb-1 border-b border-slate-400">
+                    <nav>
+                        This was a link
+                    </nav>
+                </div>
                 <h1 className="ml-1 pt-4">Add a new vehicle below:</h1>
 
                 <br />
