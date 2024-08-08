@@ -18,10 +18,23 @@ export default function InsertVehicle() {
     const [interiorRepairs, setInteriorRepairs] = useState("");
     const [valet, setValet] = useState("");
 
-
+    const [insertFlag, setInsertFlag] = useState(false);
 
 
     const { mutate } = api.pmgused.createVehicle.useMutation();
+
+    if (insertFlag) return (
+        <div className="pl-5">
+            <br />
+            <h1 className="translate-x-2 pt-2">Vehicle inserted succesfully!</h1>
+            <br />
+            <button
+                type="button"
+                className="inline-block rounded bg-neutral-800 translate-x-2 pb-2  pt-2.5 text-xs font-medium uppercase leading-normal text-neutral-50 shadow-dark-3 transition duration-150 ease-in-out hover:bg-neutral-700 hover:shadow-dark-2 focus:bg-neutral-700 focus:shadow-dark-2 focus:outline-none focus:ring-0 active:bg-neutral-900 active:shadow-dark-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
+                <a href="/vehicles" className="px-6">Trade Centre Vehicles</a>
+            </button>
+        </div>
+    )
 
     return (
         <main className="flex h-screen justify-center bg-neutral-600">
@@ -133,6 +146,7 @@ export default function InsertVehicle() {
                 <button
                     onClick={() => {
                         mutate({ stockNum: stockNumber, VIN: VIN, MMCode: MMCode, Odometer: odometer, StandInValue: standInValue, InternetPrice: internetPrice })
+                        setInsertFlag(true)
                     }}
 
                     className="ml-1 bg-green-700 hover:bg-green-800 py-2 px-4 border border-lime-900 rounded">
