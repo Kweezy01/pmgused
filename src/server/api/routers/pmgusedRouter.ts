@@ -26,6 +26,7 @@ export const pmgused = createTRPCRouter({
             });
         }),
 
+
     getLatestVehicle: publicProcedure.query(async ({ ctx }) => {
         const vehicle = await ctx.db.vehicles.findFirst({
             orderBy: { createdAt: "asc" },
@@ -34,11 +35,20 @@ export const pmgused = createTRPCRouter({
         return vehicle ?? null;
     }),
 
-    getAllVehicles: publicProcedure.query(async ({ ctx }) => {
-        const vehicle = await ctx.db.vehicles.findMany();
 
-        return vehicle ?? null;
+    getAllVehicles: publicProcedure.query(async ({ ctx }) => {
+        const vehicles = await ctx.db.vehicles.findMany();
+
+        return vehicles ?? null;
     }),
+
+
+    getAllReconStates: publicProcedure.query(async ({ ctx }) => {
+        const states = await ctx.db.reconStates.findMany();
+
+        return states ?? null;
+    }),
+
 
     createValet: publicProcedure
         .input(z.object({
@@ -51,6 +61,7 @@ export const pmgused = createTRPCRouter({
                 },
             });
         }),
+
 
     getAllValets: publicProcedure.query(async ({ ctx }) => {
         const vehicle = await ctx.db.valets.findMany();

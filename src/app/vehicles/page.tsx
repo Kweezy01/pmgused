@@ -4,8 +4,23 @@ import { useState } from "react";
 
 import { api } from "~/trpc/react";
 
+
+function getVehicles() {
+    const { data } = api.pmgused.getAllVehicles.useQuery();
+    return data
+}
+
+function getReconStates() {
+    const { data } = api.pmgused.getAllReconStates.useQuery();
+    return data
+}
+
+
 export default function VehicleTable() {
-    const { data, isLoading } = api.vehicle.getAll.useQuery();
+    const vehicleData = getVehicles()
+    const reconStates = getReconStates()
+
+    //const { data } = api.pmgused.getAllReconStates.useQuery();
 
     // const utils = api.useUtils();
     // const [stockNum, setStockNum] = useState("");
@@ -22,12 +37,10 @@ export default function VehicleTable() {
     //     },
     // });
 
-    { if (!data) return (<p>Loading data...</p>) }
+    { if (!vehicleData || !reconStates) return (<p>Loading data...</p>) }
     return (
         <div className="flex h-screen justify-center bg-neutral-600">
-            {isLoading ? (
-                <p>Loading database...</p>
-            ) : (
+            {(
                 <main className="flex bg-neutral-600 h-screen justify">
                     <div className="text-black border-x border-slate-400">
                         {/* <div>
@@ -57,13 +70,14 @@ export default function VehicleTable() {
                             <tr>
                                 <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">StockNum</td>
                                 <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">VIN</td>
-                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">MMCode</td>
-                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Odometer</td>
-                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Stand In Value</td>
-                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Internet Price</td>
+                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Workshop</td>
+                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Valet</td>
+                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Pannel Beater</td>
+                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Interior Repairer</td>
+                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Date on Floor</td>
                             </tr>
-                            {data.map((e) => {
-                                console.log(e)
+                            {vehicleData.map((e) => {
+                                console.log(reconStates[0])
                                 return (
                                     <tr key={e.StockNum}>
                                         <td className="text-center border-b border-x border-neutral-500">{e.StockNum}</td>
