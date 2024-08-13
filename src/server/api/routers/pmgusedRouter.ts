@@ -26,6 +26,29 @@ export const pmgused = createTRPCRouter({
             });
         }),
 
+    createEmptyReconState: publicProcedure
+        .input(z.object({
+            stockNum: z.string().min(1),
+        }))
+        .mutation(async ({ ctx, input }) => {
+            return ctx.db.reconStates.create({
+                data: {
+                    StockNum: input.stockNum,
+                },
+            });
+        }),
+
+    createEmptyInternetState: publicProcedure
+        .input(z.object({
+            stockNum: z.string().min(1),
+        }))
+        .mutation(async ({ ctx, input }) => {
+            return ctx.db.internetStates.create({
+                data: {
+                    StockNum: input.stockNum,
+                },
+            });
+        }),
 
     getLatestVehicle: publicProcedure.query(async ({ ctx }) => {
         const vehicle = await ctx.db.vehicles.findFirst({
@@ -67,5 +90,15 @@ export const pmgused = createTRPCRouter({
         const vehicle = await ctx.db.valets.findMany();
 
         return vehicle ?? null;
+    }),
+
+    getVehiclesWithReconState: publicProcedure.query(async ({ ctx }) => {
+        const vehiclesWithRecon = await ctx.db.vehicles.findMany({
+            include: {
+                ReconState: true, // All posts where authorId == 20
+            },
+        });
+
+        return vehiclesWithRecon ?? null;
     }),
 });

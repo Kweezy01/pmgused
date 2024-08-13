@@ -10,6 +10,11 @@ function getVehicles() {
     return data
 }
 
+function getVehiclesAndStates() {
+    const { data } = api.pmgused.getVehiclesWithReconState.useQuery();
+    return data
+}
+
 function getReconStates() {
     const { data } = api.pmgused.getAllReconStates.useQuery();
     return data
@@ -17,7 +22,7 @@ function getReconStates() {
 
 
 export default function VehicleTable() {
-    const vehicleData = getVehicles()
+    const vehicleData = getVehiclesAndStates()
     const reconStates = getReconStates()
 
     //const { data } = api.pmgused.getAllReconStates.useQuery();
@@ -74,10 +79,13 @@ export default function VehicleTable() {
                                 <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Valet</td>
                                 <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Pannel Beater</td>
                                 <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Interior Repairer</td>
-                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Date on Floor</td>
+                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Workshop</td>
+                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Pannel Beater</td>
+                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Interior Repairer</td>
+                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Valet</td>
                             </tr>
                             {vehicleData.map((e) => {
-                                console.log(reconStates[0])
+
                                 return (
                                     <tr key={e.StockNum}>
                                         <td className="text-center border-b border-x border-neutral-500">{e.StockNum}</td>
@@ -86,6 +94,17 @@ export default function VehicleTable() {
                                         <td className="text-center border-b border-x border-neutral-500">{e.Odometer}</td>
                                         <td className="text-center border-b border-x border-neutral-500">{e.StandInValue}</td>
                                         <td className="text-center border-b border-x border-neutral-500">{e.InternetPrice}</td>
+                                        {e.ReconState.map((i) => {
+
+                                            return (
+                                                <>
+                                                    <td className="text-center border border-x border-neutral-500">{i.WorkshopID}</td>
+                                                    <td className="text-center border border-x border-neutral-500">{i.PannelBeaterID}</td>
+                                                    <td className="text-center border border-x border-neutral-500">{i.InteriorRepairerID}</td>
+                                                    <td className="text-center border border-x border-neutral-500">{i.ValetID}</td>
+                                                </>
+                                            )
+                                        })}
                                     </tr>
                                 )
                             })}

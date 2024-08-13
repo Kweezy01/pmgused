@@ -10,11 +10,14 @@ export default function InsertVehicle() {
     const [stockNumber, setStockNumber] = useState("");
     const [VIN, setVIN] = useState("");
     const [model, setModel] = useState("");
+    const [buttonText, setButtonText] = useState("Insert new vehicle");
 
     const [insertFlag, setInsertFlag] = useState(false);
 
 
     const { mutate } = api.pmgused.createVehicle.useMutation();
+    const emptyReconState = api.pmgused.createEmptyReconState.useMutation()
+    const emptyInternetState = api.pmgused.createEmptyInternetState.useMutation()
 
     if (insertFlag) return (
         <div className="pl-5">
@@ -79,7 +82,7 @@ export default function InsertVehicle() {
 
                 <div className="ml-1">Model:
                     <input className="bg-black shadow appearance-none border rounded ml-4 py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-                        id="Model" type="number" placeholder="Model"
+                        id="Model" type="text" placeholder="Model"
                         value={model}
                         onChange={(e) => setModel(e.target.value)}
                     />
@@ -146,13 +149,20 @@ export default function InsertVehicle() {
                 <br />
 
                 <button
-                    onClick={() => {
+                    onClick={async () => {
+                        setButtonText("Loading...")
+                        async function sleep(ms: number): Promise<void> {
+                            return new Promise((resolve) => setTimeout(resolve, ms));
+                        }
                         mutate({ stockNum: stockNumber, VIN: VIN, MMCode: 0, Odometer: 0, StandInValue: 0, InternetPrice: 0 })
+                        await sleep(3000);
                         setInsertFlag(true)
+                        emptyReconState.mutate({ stockNum: stockNumber }) 
+                        emptyInternetState.mutate({ stockNum: stockNumber })
                     }}
 
                     className="ml-1 bg-green-700 hover:bg-green-800 py-2 px-4 border border-lime-900 rounded">
-                    Insert new vehicle
+                    {buttonText}
                 </button>
             </div>
         </main>
