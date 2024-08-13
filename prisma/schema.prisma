@@ -21,9 +21,9 @@ model Post {
 
 model Vehicles {
     StockNum      String           @id @unique
-    VIN           String           @unique
+    VIN           String?          @unique
     MMCode        Int?
-    Model         Int
+    Model         String?
     Odometer      Int?
     StandInValue  Int?
     InternetPrice Int?
