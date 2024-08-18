@@ -88,64 +88,6 @@ export default function InsertVehicle() {
                     />
                 </div>
 
-                {/* <div className="ml-1">MMCode:
-                    <input className="bg-black shadow appearance-none border rounded ml-4 py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-                        id="MMCode" type="number" placeholder="MMCode"
-                        value={MMCode}
-                        onChange={(e) => setMMCode(parseInt(e.target.value))}
-                    />
-                </div>
-
-                <div className="ml-1">StandInValue:
-                    <input className="bg-black shadow appearance-none border rounded ml-4 py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-                        id="StandInValue" type="number" placeholder="StandInValue"
-                        value={standInValue}
-                        onChange={(e) => setStandInValue(parseInt(e.target.value))}
-                    />
-                </div>
-
-                <div className="ml-1">InternetPrice:
-                    <input className="bg-black shadow appearance-none border rounded ml-4 py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-                        id="InternetPrice" type="number" placeholder="InternetPrice"
-                        value={internetPrice}
-                        onChange={(e) => setInternetPrice(parseInt(e.target.value))}
-                    />
-                </div>
-
-                <div className="ml-1">Workshop:
-                    <input className="bg-black shadow appearance-none border rounded ml-4 py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-                        id="Workshop" type="text" placeholder="Workshop"
-                        value={workshop}
-                        onChange={(e) => setWorkshop(e.target.value)}
-                    />
-                </div>
-
-                <div className="ml-1">PanelBeater:
-                    <input className="bg-black shadow appearance-none border rounded ml-4 py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-                        id="PanelBeater" type="number" placeholder="PanelBeater"
-                        value={panelBeater}
-                        onChange={(e) => setPanelBeater(e.target.value)}
-                    />
-                </div>
-
-                <div className="ml-1">InteriorRepairs:
-                    <input className="bg-black shadow appearance-none border rounded ml-4 py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-                        id="InteriorRepairs" type="text" placeholder="InteriorRepairs"
-                        value={interiorRepairs}
-                        onChange={(e) => setInteriorRepairs(e.target.value)}
-                    />
-                </div>
-
-                <div className="ml-1">Valet:
-                    <input className="right-0 bg-black shadow appearance-none border rounded ml-4 py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-                        id="Valet" type="text" placeholder="Valet"
-                        value={valet}
-                        onChange={(e) => setValet(e.target.value)}
-                    />
-                </div> */}
-
-
-
                 <br />
 
                 <button
@@ -157,7 +99,7 @@ export default function InsertVehicle() {
                         mutate({ stockNum: stockNumber, VIN: VIN, MMCode: 0, Odometer: 0, StandInValue: 0, InternetPrice: 0 })
                         await sleep(3000);
                         setInsertFlag(true)
-                        emptyReconState.mutate({ stockNum: stockNumber }) 
+                        emptyReconState.mutate({ stockNum: stockNumber })
                         emptyInternetState.mutate({ stockNum: stockNumber })
                     }}
 
