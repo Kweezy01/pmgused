@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
     provider = "mysql"
-    url      = "mysql://avnadmin:AVNS_-Y2HDgrMyEeVcASfeG0@mysql-26da990f-pmgdb-2024.k.aivencloud.com:28850/defaultdb?ssl-mode=REQUIRED"
+    url      = env("DATABASE_URL")
 }
 
 model Post {
