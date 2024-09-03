@@ -21,11 +21,12 @@ model Post {
 
 model Vehicles {
     StockNum      String           @id @unique
-    VIN           String           @unique
-    MMCode        Int
-    Odometer      Int
-    StandInValue  Int
-    InternetPrice Int
+    VIN           String?          @unique
+    MMCode        Int?
+    Model         String?
+    Odometer      Int?
+    StandInValue  Int?
+    InternetPrice Int?
     InternetState InternetStates[]
     ReconState    ReconStates[]
 
@@ -48,22 +49,22 @@ model InternetStates {
 }
 
 model ReconStates {
-    ReconID            Int       @id @default(autoincrement())
-    StockNum           String    @unique
-    Vehicle            Vehicles  @relation(fields: [StockNum], references: [StockNum])
-    WorkshopID         Int
-    WorkshopDate       DateTime
-    Workshop           Workshops @relation(fields: [WorkshopID], references: [WorkshopID])
-    PannelBeaterID     Int
-    PannelBeaterDate   DateTime
-    PannelBeater       PannelBeaters @relation(fields: [PannelBeaterID], references: [PannelBeaterID])
-    InteriorRepairerID Int
-    InteriorRepairDate DateTime
-    InteriorRepair           InteriorRepairers @relation(fields: [InteriorRepairerID], references: [InteriorRepairerID])
-    ValetID            Int
-    ValetDate          DateTime
-    Valet           Valets @relation(fields: [ValetID], references: [ValetID])
-    DateOnFloor        DateTime
+    ReconID            Int                @id @default(autoincrement())
+    StockNum           String             @unique
+    Vehicle            Vehicles           @relation(fields: [StockNum], references: [StockNum])
+    WorkshopID         Int?
+    WorkshopDate       DateTime?
+    Workshop           Workshops?         @relation(fields: [WorkshopID], references: [WorkshopID])
+    PannelBeaterID     Int?
+    PannelBeaterDate   DateTime?
+    PannelBeater       PannelBeaters?     @relation(fields: [PannelBeaterID], references: [PannelBeaterID])
+    InteriorRepairerID Int?
+    InteriorRepairDate DateTime?
+    InteriorRepair     InteriorRepairers? @relation(fields: [InteriorRepairerID], references: [InteriorRepairerID])
+    ValetID            Int?
+    ValetDate          DateTime?
+    Valet              Valets?            @relation(fields: [ValetID], references: [ValetID])
+    DateOnFloor        DateTime?
 
     createdAt DateTime @default(now())
 }
@@ -76,10 +77,10 @@ model Workshops {
 }
 
 model PannelBeaters {
-    PannelBeaterID   Int           @id @default(autoincrement())
-    PannelBeaterName String        @unique @db.VarChar(400)
+    PannelBeaterID   Int    @id @default(autoincrement())
+    PannelBeaterName String @unique @db.VarChar(400)
 
-    ReconStates      ReconStates[]
+    ReconStates ReconStates[]
 }
 
 model InteriorRepairers {
