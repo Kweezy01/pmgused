@@ -41,7 +41,7 @@ export function TailwindTable() {
 
                         {data.map((e) => {
                            return (
-                              <tr className="border-b border-blue-gray-200">
+                              <tr className="border-b border-blue-gray-200" key={e.StockNum}>
                                  <td className="py-3 px-4">{e.StockNum}</td>
                                  <td className="py-3 px-4">{e.Model}</td>
                                  <td className="py-3 px-4">{e.VIN}</td>
