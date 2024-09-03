@@ -19,7 +19,7 @@ export const pmgused = createTRPCRouter({
                     StockNum: input.stockNum,
                     VIN: input.VIN,
                     MMCode: input.MMCode,
-                    Odometer: input.Odometer,   
+                    Odometer: input.Odometer,
                     StandInValue: input.StandInValue,
                     InternetPrice: input.InternetPrice,
                 },
@@ -101,4 +101,17 @@ export const pmgused = createTRPCRouter({
 
         return vehiclesWithRecon ?? null;
     }),
+
+
+    getVehicleWithStockNum: publicProcedure
+        .input(z.object({ stockNum: z.string() }))
+        .query(async ({ ctx, input }) => {
+            const vehicle = await ctx.db.vehicles.findFirst({
+                where: {
+                    StockNum: input.stockNum
+                }
+            });
+            return vehicle;
+        }),
+
 });

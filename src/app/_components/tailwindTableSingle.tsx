@@ -2,9 +2,9 @@
 
 import { api } from "~/trpc/react";
 
-export function TailwindTable() {
+export function TailwindTableSingle({target} : {target:string}) {
 
-   const { data } = api.vehicle.getAll.useQuery();
+   const { data } = api.pmgused.getVehicleWithStockNum.useQuery({ stockNum: target });
 
    return (
       <div className="">
@@ -44,19 +44,16 @@ export function TailwindTable() {
                         </thead>
                         <tbody className="text-blue-gray-900">
 
-                           {data.map((e) => {
-                              return (
-                                 <tr className="border-b border-blue-gray-200" key={e.StockNum}>
-                                    <td className="py-3 px-4">{e.StockNum}</td>
-                                    <td className="py-3 px-4">{e.Model}</td>
-                                    <td className="py-3 px-4">{e.VIN}</td>
-                                    <td className="py-3 px-4">{e.StandInValue}</td>
-                                    <td className="py-3 px-4">
-                                       <a href="/" className="font-medium text-blue-600 hover:text-blue-800">Edit</a>
-                                    </td>
-                                 </tr>
-                              )
-                           })}
+                           <tr className="border-b border-blue-gray-200" key={data.StockNum}>
+                              <td className="py-3 px-4">{data.StockNum}</td>
+                              <td className="py-3 px-4">{data.Model}</td>
+                              <td className="py-3 px-4">{data.VIN}</td>
+                              <td className="py-3 px-4">{data.StandInValue}</td>
+                              <td className="py-3 px-4">
+                                 <a href="/" className="font-medium text-blue-600 hover:text-blue-800">Edit</a>
+                              </td>
+                           </tr>
+
                         </tbody>
                      </table>
                   </div>
