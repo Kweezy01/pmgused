@@ -22,14 +22,6 @@ export function TailwindTable() {
    //     },
    // });
 
-   const utils = api.useUtils();
-   const [stockNum, setStockNum] = useState("");
-   const [VIN, setVIN] = useState("");
-   const [MMCode, setMMCode] = useState(0);
-   const [odometer, setOdometer] = useState(0);
-   const [standInValue, setStandInValue] = useState(0);
-   const [interetPrice, setInteretPrice] = useState(0);
-
    return (
       <div className="">
          {data ? (
