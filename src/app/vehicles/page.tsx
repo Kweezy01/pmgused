@@ -75,10 +75,8 @@ export default function VehicleTable() {
                             <tr>
                                 <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">StockNum</td>
                                 <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">VIN</td>
-                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Workshop</td>
-                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Valet</td>
-                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Pannel Beater</td>
-                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Interior Repairer</td>
+                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Model</td>
+                                <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">MMCode</td>
                                 <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Workshop</td>
                                 <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Pannel Beater</td>
                                 <td className="font-bold text-center border-b border-x border-neutral-500 bg-blue-500 p-2">Interior Repairer</td>
@@ -90,10 +88,8 @@ export default function VehicleTable() {
                                     <tr key={e.StockNum}>
                                         <td className="text-center border-b border-x border-neutral-500">{e.StockNum}</td>
                                         <td className="text-center border-b border-x border-neutral-500">{e.VIN}</td>
+                                        <td className="text-center border-b border-x border-neutral-500">{e.Model}</td>
                                         <td className="text-center border-b border-x border-neutral-500">{e.MMCode}</td>
-                                        <td className="text-center border-b border-x border-neutral-500">{e.Odometer}</td>
-                                        <td className="text-center border-b border-x border-neutral-500">{e.StandInValue}</td>
-                                        <td className="text-center border-b border-x border-neutral-500">{e.InternetPrice}</td>
                                         {e.ReconState.map((i) => {
 
                                             return (

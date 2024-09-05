@@ -10,6 +10,7 @@ export default function InsertVehicle() {
     const [stockNumber, setStockNumber] = useState("");
     const [VIN, setVIN] = useState("");
     const [model, setModel] = useState("");
+    const [mmCode, setMmCode] = useState(0);
     const [buttonText, setButtonText] = useState("Insert new vehicle");
 
     const [insertFlag, setInsertFlag] = useState(false);
@@ -88,6 +89,14 @@ export default function InsertVehicle() {
                     />
                 </div>
 
+                <div className="ml-1">MMCode:
+                    <input className="bg-black shadow appearance-none border rounded ml-4 py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+                        id="MMCode" type="text"
+                        value={mmCode}
+                        onChange={(e) => setMmCode(parseInt(e.target.value))}
+                    />
+                </div>
+
                 <br />
 
                 <button
@@ -96,7 +105,7 @@ export default function InsertVehicle() {
                         async function sleep(ms: number): Promise<void> {
                             return new Promise((resolve) => setTimeout(resolve, ms));
                         }
-                        mutate({ stockNum: stockNumber, VIN: VIN, MMCode: 0, Odometer: 0, StandInValue: 0, InternetPrice: 0 })
+                        mutate({ stockNum: stockNumber, VIN: VIN, Model: model, MMCode: mmCode, Odometer: 0, StandInValue: 0, InternetPrice: 0 })
                         await sleep(3000);
                         setInsertFlag(true)
                         emptyReconState.mutate({ stockNum: stockNumber })

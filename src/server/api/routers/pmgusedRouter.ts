@@ -8,6 +8,7 @@ export const pmgused = createTRPCRouter({
         .input(z.object({
             stockNum: z.string().min(1),
             VIN: z.string().min(1),
+            Model: z.string().min(1),
             MMCode: z.number(),
             Odometer: z.number(),
             StandInValue: z.number(),
@@ -18,6 +19,7 @@ export const pmgused = createTRPCRouter({
                 data: {
                     StockNum: input.stockNum,
                     VIN: input.VIN,
+                    Model: input.Model,
                     MMCode: input.MMCode,
                     Odometer: input.Odometer,
                     StandInValue: input.StandInValue,
