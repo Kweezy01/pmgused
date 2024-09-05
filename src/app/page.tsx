@@ -1,10 +1,7 @@
 // import Link from "next/link";
 
 // import { LatestPost } from "~/app/_components/post";
-import { InsertVehicle } from "./_components/insertVehicle";
 import { TailwindTable } from "./_components/tailwindTable";
-import { LatestVehicle } from "./_components/vehicle";
-import { VehicleTable } from "./_components/vehicleTable";
 import { api, HydrateClient } from "~/trpc/server";
 
 export default async function Home() {

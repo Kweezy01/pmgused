@@ -6,8 +6,6 @@ export function VehicleCard({ target }: { target: string }) {
 
    const { data } = api.pmgused.getVehicleWithStockNum.useQuery({ stockNum: target });
 
-   const today = new Date()
-
    return (
       <main className="flex bg-black h-screen justify-center">
          <div className="text-black bg-center bg-contain bg-[url('https://scontent-jnb1-1.xx.fbcdn.net/v/t39.30808-6/260277972_10227320945231659_2177364538079183029_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=1ac024&_nc_ohc=BNUj0U7h4X0AX9ag8BH&_nc_ht=scontent-jnb1-1.xx&oh=00_AfDC04u-kGWkfzpbF3M2J_AV6brZETHXZaWgnR4ow5Zj7A&oe=65175085')] w-full     border-x border-slate-400 md:max-w-2xl">
