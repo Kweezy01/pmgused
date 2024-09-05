@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { TailwindTableSingle } from "~/app/_components/tailwindTableSingle";
+import { VehicleCard } from "~/app/_components/vehicleCard";
 import { api } from "~/trpc/react";
 
 export default function VehiclePage() {
@@ -15,7 +15,7 @@ export default function VehiclePage() {
 
   return (
     <>
-    <TailwindTableSingle target={stockNum}/>
+      <VehicleCard target={stockNum} />
     </>
   )
 }
