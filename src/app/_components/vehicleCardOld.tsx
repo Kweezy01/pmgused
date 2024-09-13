@@ -2,7 +2,7 @@
 
 import { api } from "~/trpc/react";
 
-export function VehicleCard({ target }: { target: string }) {
+export function VehicleCardOld({ target }: { target: string }) {
 
    const { data } = api.pmgused.getVehicleWithStockNum.useQuery({ stockNum: target });
 

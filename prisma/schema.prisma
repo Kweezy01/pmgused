@@ -23,6 +23,7 @@ model Vehicles {
     StockNum      String           @id @unique
     VIN           String?          @unique
     MMCode        Int?
+    Registration  String?
     Model         String?
     Odometer      Int?
     StandInValue  Int?

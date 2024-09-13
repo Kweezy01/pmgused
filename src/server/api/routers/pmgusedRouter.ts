@@ -4,29 +4,32 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const pmgused = createTRPCRouter({
 
-    createVehicle: publicProcedure
-        .input(z.object({
-            stockNum: z.string().min(1),
-            VIN: z.string().min(1),
-            Model: z.string().min(1),
-            MMCode: z.number(),
-            Odometer: z.number(),
-            StandInValue: z.number(),
-            InternetPrice: z.number(),
-        }))
-        .mutation(async ({ ctx, input }) => {
-            return ctx.db.vehicles.create({
-                data: {
-                    StockNum: input.stockNum,
-                    VIN: input.VIN,
-                    Model: input.Model,
-                    MMCode: input.MMCode,
-                    Odometer: input.Odometer,
-                    StandInValue: input.StandInValue,
-                    InternetPrice: input.InternetPrice,
-                },
-            });
-        }),
+    createVehicle:
+
+        publicProcedure
+            .input(z.object({
+                stockNum: z.string().min(1),
+                VIN: z.string().min(1),
+                Model: z.string().min(1),
+                MMCode: z.number(),
+                Odometer: z.number(),
+                StandInValue: z.number(),
+                InternetPrice: z.number(),
+            }))
+            .mutation(async ({ ctx, input }) => {
+                return ctx.db.vehicles.create({
+                    data: {
+                        StockNum: input.stockNum,
+                        VIN: input.VIN,
+                        Model: input.Model,
+                        MMCode: input.MMCode,
+                        Odometer: input.Odometer,
+                        StandInValue: input.StandInValue,
+                        InternetPrice: input.InternetPrice,
+                    },
+                });
+            }),
+
 
     createEmptyReconState: publicProcedure
         .input(z.object({

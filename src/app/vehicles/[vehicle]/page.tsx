@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { VehicleCard } from "~/app/_components/vehicleCard";
+import { VehicleCard } from "~/components/vehicle-card";
 import { api } from "~/trpc/react";
 
 export default function VehiclePage() {
@@ -14,8 +14,8 @@ export default function VehiclePage() {
   if (!data) return <div>Car not found</div>
 
   return (
-    <>
-      <VehicleCard target={stockNum} />
-    </>
+    <div className="flex justify-center">
+      <VehicleCard vehicle={stockNum} />
+    </div>
   )
 }
