@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 
 async function sleep(ms: number): Promise<void> {
    return new Promise(
-       (resolve) => setTimeout(resolve, ms));
+      (resolve) => setTimeout(resolve, ms));
 }
 
 export const createVehicleRouter = createTRPCRouter({
@@ -21,7 +21,6 @@ export const createVehicleRouter = createTRPCRouter({
          InternetPrice: z.number(),
       }))
       .mutation(async ({ ctx, input }) => {
-         const { StockNum } = input;
 
          const result = await prisma.$transaction(async (prisma: any) => {
             const vehicle = await ctx.db.vehicles.create({
@@ -41,19 +40,69 @@ export const createVehicleRouter = createTRPCRouter({
 
             const recon = await ctx.db.reconStates.create({
                data: {
-                   StockNum: input.StockNum,
+                  StockNum: input.StockNum,
                },
-           });
+            });
 
             const internet = await ctx.db.internetStates.create({
                data: {
-                   StockNum: input.StockNum,
+                  StockNum: input.StockNum,
                },
-           });
+            });
 
             return { vehicle, recon, internet };
          });
 
          return result;
       }),
-});
+
+   selectOneVehicleWithReconAndInternet: publicProcedure
+      .input(z.object({ stockNum: z.string() }))
+      .query(async ({ ctx, input }) => {
+         const vehiclesWithRecon = await ctx.db.vehicles.findUnique({
+            where: {
+               StockNum: input.stockNum,
+            },
+            include: {
+               ReconState: true, // All posts where authorId == 20
+               InternetState: true,
+            },
+         });
+
+         return vehiclesWithRecon ?? null;
+      }),
+
+   selectVehicle: publicProcedure
+      .input(z.object({ stockNum: z.string() }))
+      .query(async ({ ctx, input }) => {
+         const vehicle = await ctx.db.vehicles.findUnique({
+            where: {
+               StockNum: input.stockNum,
+            },
+         });
+         return vehicle;
+      }),
+
+      selectReconState: publicProcedure
+      .input(z.object({ stockNum: z.string() }))
+      .query(async ({ ctx, input }) => {
+         const reconState = await ctx.db.reconStates.findUnique({
+            where: {
+               StockNum: input.stockNum,
+            },
+         });
+         return reconState;
+      }),
+
+      selectInternetState: publicProcedure
+      .input(z.object({ stockNum: z.string() }))
+      .query(async ({ ctx, input }) => {
+         const internetState = await ctx.db.reconStates.findUnique({
+            where: {
+               StockNum: input.stockNum,
+            },
+         });
+         return internetState;
+      }),
+
+})

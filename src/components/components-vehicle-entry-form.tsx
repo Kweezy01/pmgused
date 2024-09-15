@@ -18,7 +18,7 @@ export function VehicleEntryFormComponent() {
     cost: ''
   })
 
-  const createVehicleMutation = api.createVehicle.createVehicleWithReconAndInternet.useMutation()
+  const createVehicleMutation = api.main.createVehicleWithReconAndInternet.useMutation()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target

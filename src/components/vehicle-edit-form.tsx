@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
@@ -10,16 +10,12 @@ import { Calendar } from "~/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover"
 import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
-
-import { usePathname } from "next/navigation";
-
 import { api } from "~/trpc/react";
 
 type EntryType = {
   StockNum: string
   VIN: string | null
   MMCode: number | null
-  Registration: number | null
   Model: string | null
   Odometer: number | null
   StandInValue: number | null
@@ -46,38 +42,6 @@ type EntryType = {
   }
 }
 
-// Simulated initial entry
-const initialEntry: EntryType = {
-  StockNum: "ST12345",
-  VIN: "1HGCM82633A004352",
-  MMCode: 12345,
-  Registration: 34244,
-  Model: "Sedan",
-  Odometer: 50000,
-  StandInValue: 15000,
-  InternetPrice: 18999,
-  ReconStates: {
-    WorkshopID: null,
-    WorkshopDate: null,
-    PannelBeaterID: null,
-    PannelBeaterDate: null,
-    InteriorRepairerID: null,
-    InteriorRepairDate: null,
-    ValetID: null,
-    ValetDate: null,
-    DateOnFloor: null,
-  },
-  InternetStates: {
-    PicsTaken: false,
-    PicsOnPc: false,
-    OnAutoTrader: false,
-    OnCars: false,
-    OnPMGUsed: false,
-    OnWhatsapp: false,
-    OnPinnacle: false,
-  },
-}
-
 // Simulated data for related entities
 const workshops = [
   { id: 1, name: "Workshop A" },
@@ -96,60 +60,124 @@ const valets = [
   { id: 2, name: "Valet B" },
 ]
 
-
-
 export default function VehicleEditForm({ stockNum }: { stockNum: string }) {
-
-
-  if (typeof stockNum != "string") return (<h1>Team not found</h1>)
-  const { data } = api.pmgused.getVehicleWithStockNum.useQuery({ stockNum: stockNum });
-
-
-
-  const [entry, setEntry] = useState<EntryType>(data)
+  const [entry, setEntry] = useState<EntryType | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type } = e.target
-    setEntry(prev => ({
-      ...prev,
-      [name]: type === 'number' ? (value ? parseInt(value, 10) : null) : value
-    }))
-  }
+
+  //states for vehicle data
+  const [VIN, setVIN] = useState("")
+  const [MMCode, setMMCode] = useState(0)
+  const [Model, setModel] = useState("")
+  const [Odometer, setOdometer] = useState(0)
+  const [StandInValue, setStandInValue] = useState(0)
+  const [InternetPrice, setInternetPrice] = useState(0)
+  const [ReconStates, setReconStates] = useState({})
+  const [InternetStates, setInternetStates] = useState({})
+
+
+  //Recon States
+  const [WorkshopID, setWorkshopID] = useState(0)
+  const [WorkshopDate, setWorkshopDate] = useState(new Date)
+  const [PannelBeaterID, setPannelBeaterID] = useState(0)
+  const [PannelBeaterDate, setPannelBeaterDate] = useState(new Date)
+  const [InteriorRepairerID, setInteriorRepairerID] = useState(0)
+  const [InteriorRepairDate, setInteriorRepairDate] = useState(new Date)
+  const [ValetID, setValetID] = useState(0)
+  const [ValetDate, setValetDate] = useState(new Date)
+  const [DateOnFloor, setDateOnFloor] = useState(new Date)
+  //Internet States
+
+  const [PicsTaken, setPicsTaken] = useState(false)
+  const [PicsOnPc, setPicsOnPc] = useState(false)
+  const [OnAutoTrader, setOnAutoTrader] = useState(false)
+  const [OnCars, setOnCars] = useState(false)
+  const [OnPMGUsed, setOnPMGUsed] = useState(false)
+  const [OnWhatsapp, setOnWhatsapp] = useState(false)
+  const [OnPinnacle, setOnPinnacle] = useState(false)
+
+
+
+  const { data, isLoading } = api.editRouter.getVehicle.useQuery({ stockNum })
+  const updateVehicleMutation = api.editRouter.updateVehicle.useMutation()
+
+  useEffect(() => {
+    if (data) {
+      setEntry(data)
+    }
+  }, [data])
 
   const handleReconStateChange = (name: keyof EntryType['ReconStates'], value: number | Date | null | undefined) => {
+    if (!entry) return
     setEntry(prev => ({
-      ...prev,
+      ...prev!,
       ReconStates: {
-        ...prev.ReconStates,
+        ...prev!.ReconStates,
         [name]: value === undefined ? null : value
       }
     }))
   }
 
   const handleInternetStateChange = (name: keyof EntryType['InternetStates']) => {
+    if (!entry) return
     setEntry(prev => ({
-      ...prev,
+      ...prev!,
       InternetStates: {
-        ...prev.InternetStates,
-        [name]: !prev.InternetStates[name]
+        ...prev!.InternetStates,
+        [name]: !prev!.InternetStates[name]
       }
     }))
   }
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     setMessage(null)
 
-    // Simulated API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    // Update successful
-    setIsSubmitting(false)
-    setMessage("The vehicle entry has been successfully updated.")
+    try {
+      await updateVehicleMutation.mutateAsync({
+        StockNum: stockNum,
+        VIN: VIN,
+        MMCode: MMCode,
+        Model: Model,
+        Odometer: Odometer,
+        StandInValue: StandInValue,
+        InternetPrice: InternetPrice,
+        ReconStates: {
+          WorkshopID: WorkshopID,
+          WorkshopDate: WorkshopDate,
+          PannelBeaterID: PannelBeaterID,
+          PannelBeaterDate: PannelBeaterDate,
+          InteriorRepairerID: InteriorRepairerID,
+          InteriorRepairDate: InteriorRepairDate,
+          ValetID: ValetID,
+          ValetDate: ValetDate,
+          DateOnFloor: DateOnFloor
+        },
+        InternetStates: {
+          PicsTaken: PicsTaken,
+          PicsOnPc: PicsOnPc,
+          OnAutoTrader: OnAutoTrader,
+          OnCars: OnCars,
+          OnPMGUsed: OnPMGUsed,
+          OnWhatsapp: OnWhatsapp,
+          OnPinnacle: OnPinnacle
+        }
+      })
+      setMessage("The vehicle entry has been successfully updated.")
+    } catch (error) {
+      setMessage("An error occurred while updating the vehicle entry.")
+      console.error("Update error:", error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
+
+  if (isLoading) return <div>Loading...</div>
+
+  if (!entry) return <div>No data available</div>
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl mx-auto p-6 bg-white rounded-lg shadow">
@@ -168,8 +196,6 @@ export default function VehicleEditForm({ stockNum }: { stockNum: string }) {
             id="StockNum"
             name="StockNum"
             value={entry.StockNum}
-            onChange={handleChange}
-            required
           />
         </div>
 
@@ -179,7 +205,7 @@ export default function VehicleEditForm({ stockNum }: { stockNum: string }) {
             id="VIN"
             name="VIN"
             value={entry.VIN || ''}
-            onChange={handleChange}
+            onChange={(e) => setVIN(e.target.value)}
           />
         </div>
 
@@ -190,7 +216,7 @@ export default function VehicleEditForm({ stockNum }: { stockNum: string }) {
             name="MMCode"
             type="number"
             value={entry.MMCode || ''}
-            onChange={handleChange}
+            onChange={(e) => setMMCode(parseInt(e.target.value))}
           />
         </div>
 
@@ -200,7 +226,7 @@ export default function VehicleEditForm({ stockNum }: { stockNum: string }) {
             id="Model"
             name="Model"
             value={entry.Model || ''}
-            onChange={handleChange}
+            onChange={(e) => setModel(e.target.value)}
           />
         </div>
 
@@ -211,7 +237,7 @@ export default function VehicleEditForm({ stockNum }: { stockNum: string }) {
             name="Odometer"
             type="number"
             value={entry.Odometer || ''}
-            onChange={handleChange}
+            onChange={(e) => setOdometer(parseInt(e.target.value))}
           />
         </div>
 
@@ -222,7 +248,7 @@ export default function VehicleEditForm({ stockNum }: { stockNum: string }) {
             name="StandInValue"
             type="number"
             value={entry.StandInValue || ''}
-            onChange={handleChange}
+            onChange={(e) => setStandInValue(parseInt(e.target.value))}
           />
         </div>
 
@@ -233,7 +259,7 @@ export default function VehicleEditForm({ stockNum }: { stockNum: string }) {
             name="InternetPrice"
             type="number"
             value={entry.InternetPrice || ''}
-            onChange={handleChange}
+            onChange={(e) => setInternetPrice(parseInt(e.target.value))}
           />
         </div>
       </div>

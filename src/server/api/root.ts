@@ -1,5 +1,6 @@
 import { postRouter } from "~/server/api/routers/post";
 import { vehicleRouter } from "~/server/api/routers/vehicle"
+import { editRouter } from "~/server/api/routers/editRouter"
 import { createVehicleRouter } from "~/server/api/routers/vehicleRouter"
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { pmgused } from "./routers/pmgusedRouter";
@@ -11,7 +12,8 @@ import { pmgused } from "./routers/pmgusedRouter";
  */
 export const appRouter = createTRPCRouter({
   post: postRouter,
-  createVehicle: createVehicleRouter,
+  main: createVehicleRouter,
+  editRouter: editRouter,
   vehicle: vehicleRouter,
   pmgused: pmgused,
 });

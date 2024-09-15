@@ -8,15 +8,15 @@ export default function EditVehicle() {
 
    const pathSlug = usePathname().split("/")
    pathSlug.pop()
-   console.log(pathSlug)
    const stockNum = pathSlug.pop()
+   console.log(stockNum)
 
    if (typeof stockNum != "string") return (<h1>Team not found</h1>)
 
    return (
       <div>
 
-         <VehicleEditForm vehicle={stockNum} />
+         <VehicleEditForm stockNum={stockNum} />
 
       </div>
    )
