@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~
 
 import { api } from "~/trpc/react";
 
-export function VehicleCard({ vehicle }: { vehicle: string }) {
+export default function VehicleCard({ vehicle }: { vehicle: string }) {
 
   
   // const vehicleInfo = {

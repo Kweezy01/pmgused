@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { VehicleCard } from "~/components/vehicle-card";
+import VehicleCard from "~/components/vehicle-card";
 import { api } from "~/trpc/react";
 
 export default function VehiclePage() {

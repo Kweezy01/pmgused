@@ -16,7 +16,7 @@ export default function EditVehicle() {
    return (
       <div>
 
-         <VehicleEditForm stockNum={stockNum} />
+         <VehicleEditForm stockNumProp={stockNum} />
 
       </div>
    )

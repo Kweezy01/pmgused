@@ -1,155 +1,174 @@
-import { z } from 'zod';
-import { createTRPCRouter, publicProcedure } from '~/server/api/trpc';
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import { z } from "zod";
+import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const editRouter = createTRPCRouter({
-  getVehicle: publicProcedure
+
+  getVehicleByStockNum: publicProcedure
     .input(z.object({ stockNum: z.string() }))
     .query(async ({ ctx, input }) => {
-      const entry = await ctx.db.vehicles.findUnique({
-        where: { StockNum: input.stockNum },
-        select: {
-          StockNum: true,
-          VIN: true,
-          MMCode: true,
-          Model: true,
-          Odometer: true,
-          StandInValue: true,
-          InternetPrice: true,
-          InternetState: {
-            select: {
-              PicsTaken: true,
-              PicsOnPc: true,
-              OnAutoTrader: true,
-              OnCars: true,
-              OnPMGUsed: true,
-              OnWhatsapp: true,
-              OnPinnacle: true,
-            },
-          },
-          ReconState: {
-            select: {
-              WorkshopID: true,
-              WorkshopDate: true,
-              PannelBeaterID: true,
-              PannelBeaterDate: true,
-              InteriorRepairerID: true,
-              InteriorRepairDate: true,
-              ValetID: true,
-              ValetDate: true,
-              DateOnFloor: true,
-              Workshop: {
-                select: {
-                  WorkshopName: true,
-                },
-              },
-              PannelBeater: {
-                select: {
-                  PannelBeaterName: true,
-                },
-              },
-              InteriorRepair: {
-                select: {
-                  InteriorRepairerName: true,
-                },
-              },
-              Valet: {
-                select: {
-                  ValetName: true,
-                },
-              },
-            },
-          },
-        },
+      const vehicle = await ctx.db.vehicles.findUnique({
+        where: { StockNum: input.stockNum }
       });
-
-      if (!entry) {
-        throw new Error('Vehicle not found');
-      }
-
-      // Reshape the data to match EntryType
-      return {
-        StockNum: entry.StockNum,
-        VIN: entry.VIN,
-        MMCode: entry.MMCode,
-        Model: entry.Model,
-        Odometer: entry.Odometer,
-        StandInValue: entry.StandInValue,
-        InternetPrice: entry.InternetPrice,
-        ReconStates: {
-          WorkshopID: entry.ReconState[0]?.WorkshopID ?? null,
-          WorkshopDate: entry.ReconState[0]?.WorkshopDate ?? null,
-          PannelBeaterID: entry.ReconState[0]?.PannelBeaterID ?? null,
-          PannelBeaterDate: entry.ReconState[0]?.PannelBeaterDate ?? null,
-          InteriorRepairerID: entry.ReconState[0]?.InteriorRepairerID ?? null,
-          InteriorRepairDate: entry.ReconState[0]?.InteriorRepairDate ?? null,
-          ValetID: entry.ReconState[0]?.ValetID ?? null,
-          ValetDate: entry.ReconState[0]?.ValetDate ?? null,
-          DateOnFloor: entry.ReconState[0]?.DateOnFloor ?? null,
-        },
-        InternetStates: {
-          PicsTaken: entry.InternetState[0]?.PicsTaken ?? false,
-          PicsOnPc: entry.InternetState[0]?.PicsOnPc ?? false,
-          OnAutoTrader: entry.InternetState[0]?.OnAutoTrader ?? false,
-          OnCars: entry.InternetState[0]?.OnCars ?? false,
-          OnPMGUsed: entry.InternetState[0]?.OnPMGUsed ?? false,
-          OnWhatsapp: entry.InternetState[0]?.OnWhatsapp ?? false,
-          OnPinnacle: entry.InternetState[0]?.OnPinnacle ?? false,
-        },
-      };
+      return vehicle;
     }),
 
-  updateVehicle: publicProcedure
-    .input(z.object({
-      StockNum: z.string(),
-      VIN: z.string().nullable(),
-      MMCode: z.number().nullable(),
-      Model: z.string().nullable(),
-      Odometer: z.number().nullable(),
-      StandInValue: z.number().nullable(),
-      InternetPrice: z.number().nullable(),
-      ReconStates: z.object({
-        WorkshopID: z.number().nullable(),
-        WorkshopDate: z.date().nullable(),
-        PannelBeaterID: z.number().nullable(),
-        PannelBeaterDate: z.date().nullable(),
-        InteriorRepairerID: z.number().nullable(),
-        InteriorRepairDate: z.date().nullable(),
-        ValetID: z.number().nullable(),
-        ValetDate: z.date().nullable(),
-        DateOnFloor: z.date().nullable(),
-      }),
-      InternetStates: z.object({
-        PicsTaken: z.boolean(),
-        PicsOnPc: z.boolean(),
-        OnAutoTrader: z.boolean(),
-        OnCars: z.boolean(),
-        OnPMGUsed: z.boolean(),
-        OnWhatsapp: z.boolean(),
-        OnPinnacle: z.boolean(),
-      }),
-    }))
-    .mutation(async ({ input }) => {
-      const { StockNum, ReconStates, InternetStates, ...vehicleData } = input;
-
-      await prisma.$transaction([
-        prisma.vehicles.update({
-          where: { StockNum },
-          data: vehicleData,
-        }),
-        prisma.reconStates.upsert({
-          where: { StockNum },
-          create: { StockNum, ...ReconStates },
-          update: ReconStates,
-        }),
-        prisma.internetStates.upsert({
-          where: { StockNum },
-          create: { StockNum, ...InternetStates },
-          update: InternetStates,
-        }),
-      ]);
-
-      return { success: true, message: 'Vehicle updated successfully' };
+    getReconByStockNum: publicProcedure
+    .input(z.object({ stockNum: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const vehicle = await ctx.db.reconStates.findUnique({
+        where: { StockNum: input.stockNum }
+      });
+      return vehicle;
     }),
+
+    getInternetByStockNum: publicProcedure
+    .input(z.object({ stockNum: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const vehicle = await ctx.db.internetStates.findUnique({
+        where: { StockNum: input.stockNum }
+      });
+      return vehicle;
+    }),
+
+  updateVehicle:
+
+    publicProcedure
+      .input(z.object({
+        stockNum: z.string().min(1),
+        VIN: z.string().min(1),
+        Model: z.string().min(1),
+        MMCode: z.number(),
+        Odometer: z.number(),
+        StandInValue: z.number(),
+        InternetPrice: z.number(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await ctx.db.vehicles.update({
+          where: {
+            StockNum: input.stockNum
+          },
+          data: {
+            VIN: input.VIN,
+            Model: input.Model,
+            MMCode: input.MMCode,
+            Odometer: input.Odometer,
+            StandInValue: input.StandInValue,
+            InternetPrice: input.InternetPrice,
+          },
+        });
+      }),
+
+  updateRecon:
+
+    publicProcedure
+      .input(z.object({
+        stockNum: z.string().min(1),
+        WorkshopID: z.number().min(1),
+        WorkshopDate: z.date(),
+        PannelBeaterID: z.number().min(1),
+        PannelBeaterDate: z.date(),
+        InteriorRepairerID: z.number().min(1),
+        InteriorRepairDate: z.date(),
+        ValetID: z.number().min(1),
+        ValetDate: z.date(),
+        DateOnFloor: z.date(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await ctx.db.reconStates.update({
+          where: {
+            StockNum: input.stockNum
+          },
+          data: {
+            WorkshopID: input.WorkshopID,
+            WorkshopDate: input.WorkshopDate,
+            PannelBeaterID: input.PannelBeaterID,
+            PannelBeaterDate: input.PannelBeaterDate,
+            InteriorRepairerID: input.InteriorRepairerID,
+            InteriorRepairDate: input.InteriorRepairDate,
+            ValetID: input.ValetID,
+            ValetDate: input.ValetDate,
+          },
+        });
+      }),
+
+  // updateAll: publicProcedure
+  //   .input(
+  //     z.object({
+  //       StockNum: z.string(),
+  //       VIN: z.string().nullable(),
+  //       MMCode: z.number().nullable(),
+  //       Registration: z.string().nullable(),
+  //       Model: z.string().nullable(),
+  //       Odometer: z.number().nullable(),
+  //       StandInValue: z.number().nullable(),
+  //       InternetPrice: z.number().nullable(),
+  //       InternetState: z.object({
+  //         PicsTaken: z.boolean(),
+  //         PicsOnPc: z.boolean(),
+  //         OnAutoTrader: z.boolean(),
+  //         OnCars: z.boolean(),
+  //         OnPMGUsed: z.boolean(),
+  //         OnWhatsapp: z.boolean(),
+  //         OnPinnacle: z.boolean(),
+  //       }),
+  //       ReconState: z.object({
+  //         WorkshopID: z.number().nullable(),
+  //         WorkshopDate: z.date().nullable(),
+  //         PannelBeaterID: z.number().nullable(),
+  //         PannelBeaterDate: z.date().nullable(),
+  //         InteriorRepairerID: z.number().nullable(),
+  //         InteriorRepairDate: z.date().nullable(),
+  //         ValetID: z.number().nullable(),
+  //         ValetDate: z.date().nullable(),
+  //         DateOnFloor: z.date().nullable(),
+  //       }),
+  //     })
+  //   )
+  //   .mutation(async ({ ctx, input }) => {
+  //     const updatedVehicle = await ctx.db.vehicles.update({
+  //       where: { StockNum: input.StockNum },
+  //       data: {
+  //         VIN: input.VIN,
+  //         MMCode: input.MMCode,
+  //         Registration: input.Registration,
+  //         Model: input.Model,
+  //         Odometer: input.Odometer,
+  //         StandInValue: input.StandInValue,
+  //         InternetPrice: input.InternetPrice,
+  //         InternetState: {
+  //           update: {
+  //             where: { StockNum: input.StockNum },
+  //             data: input.InternetState,
+  //           },
+  //         },
+  //         ReconState: {
+  //           update: {
+  //             where: { StockNum: input.StockNum },
+  //             data: input.ReconState,
+  //           },
+  //         },
+  //       },
+  //       include: {
+  //         InternetState: true,
+  //         ReconState: true,
+  //       },
+  //     });
+  //     return updatedVehicle;
+  //   }),
+
+  getAllWorkshops: publicProcedure.query(async ({ ctx }) => {
+    return ctx.db.workshops.findMany();
+  }),
+
+  getAllPannelBeaters: publicProcedure.query(async ({ ctx }) => {
+    return ctx.db.pannelBeaters.findMany();
+  }),
+
+  getAllInteriorRepairers: publicProcedure.query(async ({ ctx }) => {
+    return ctx.db.interiorRepairers.findMany();
+  }),
+
+  getAllValets: publicProcedure.query(async ({ ctx }) => {
+    return ctx.db.valets.findMany();
+  }),
 });
