@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
 import { Checkbox } from "~/components/ui/checkbox"
@@ -125,11 +125,11 @@ export default function VehicleEditForm({ stockNumProp }: { stockNumProp: string
             </div>
             <div className="space-y-2">
               <Label htmlFor="VIN">VIN</Label>
-              <Input id="VIN" placeholder={vehicleData?.VIN || ""} onChange={(e) => setVin(e.target.value)} />
+              <Input id="VIN" placeholder={vehicleData?.VIN ?? ""} onChange={(e) => setVin(e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="MMCode">MM Code</Label>
-              <Input id="MMCode" placeholder={vehicleData?.MMCode?.toString() || ""} type="number" onChange={(e) => setMmCode(parseInt(e.target.value))} />
+              <Input id="MMCode" placeholder={vehicleData?.MMCode?.toString() ?? ""} type="number" onChange={(e) => setMmCode(parseInt(e.target.value))} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="Registration">Registration</Label>
@@ -137,7 +137,7 @@ export default function VehicleEditForm({ stockNumProp }: { stockNumProp: string
             </div>
             <div className="space-y-2">
               <Label htmlFor="Model">Model</Label>
-              <Input id="Model" placeholder={vehicleData?.Model || ""} onChange={(e) => setModel(e.target.value)} />
+              <Input id="Model" placeholder={vehicleData?.Model ?? ""} onChange={(e) => setModel(e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="Odometer">Odometer</Label>

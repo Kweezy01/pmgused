@@ -22,7 +22,7 @@ export const createVehicleRouter = createTRPCRouter({
       }))
       .mutation(async ({ ctx, input }) => {
 
-         const result = await prisma.$transaction(async (prisma: any) => {
+         const result = await prisma.$transaction(async () => {
             const vehicle = await ctx.db.vehicles.create({
                data: {
                   StockNum: input.StockNum,

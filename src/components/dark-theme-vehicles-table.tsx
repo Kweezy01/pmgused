@@ -44,12 +44,12 @@ export function DarkThemeVehiclesTableComponent() {
                   {vehicle.StockNum}
                 </Link>
               </TableCell>
-              <TableCell>{vehicle.VIN || 'N/A'}</TableCell>
-              <TableCell>{vehicle.MMCode || 'N/A'}</TableCell>
-              <TableCell>{vehicle.Model || 'N/A'}</TableCell>
-              <TableCell>{vehicle.Odometer?.toLocaleString() || 'N/A'}</TableCell>
-              <TableCell>${vehicle.StandInValue?.toLocaleString() || 'N/A'}</TableCell>
-              <TableCell>${vehicle.InternetPrice?.toLocaleString() || 'N/A'}</TableCell>
+              <TableCell>{vehicle.VIN ?? 'N/A'}</TableCell>
+              <TableCell>{vehicle.MMCode ?? 'N/A'}</TableCell>
+              <TableCell>{vehicle.Model ?? 'N/A'}</TableCell>
+              <TableCell>{vehicle.Odometer?.toLocaleString() ?? 'N/A'}</TableCell>
+              <TableCell>${vehicle.StandInValue?.toLocaleString() ?? 'N/A'}</TableCell>
+              <TableCell>${vehicle.InternetPrice?.toLocaleString() ?? 'N/A'}</TableCell>
               <TableCell>
                 <Link 
                   href={`/internet-states/${vehicle.StockNum}`}
