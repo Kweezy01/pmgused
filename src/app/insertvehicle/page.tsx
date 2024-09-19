@@ -1,16 +1,20 @@
 "use client";
 
 import { VehicleEntryFormComponent } from "~/components/components-vehicle-entry-form";
+import { Button } from "~/components/ui/button";
 
 
 export default function InsertVehicle() {
-
+6
 
 
     return (
-        <>
+        <div >
+            <a className="flex w-full justify-center mt-3" href='/'>
+                <Button className='bg-stone-500 mb-2'>Home</Button>
+            </a>
             <VehicleEntryFormComponent />
-        </>
+        </div>
     )
 
 }

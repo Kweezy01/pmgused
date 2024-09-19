@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table"
 
 import { api } from "~/trpc/react";
+import { Button } from './ui/button';
 
 // Sample data based on the provided model
 
@@ -16,6 +17,7 @@ export function DarkThemeVehiclesTableComponent() {
   
   return (
     <div className="p-8 bg-gray-900 text-gray-100 min-h-screen">
+      <a href='/insertvehicle'><Button className='bg-stone-500 mb-2'>Insert Vehicle</Button></a>
       <Table>
         <TableCaption>List of Vehicles</TableCaption>
         <TableHeader>

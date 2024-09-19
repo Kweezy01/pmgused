@@ -34,7 +34,7 @@ export default function VehicleCard({ vehicle }: { vehicle: string }) {
   if (!vehicleInfo) return <div>Loading</div>
 
   return (
-    <Card className="w-full max-w-6xl">
+    <Card className="w-full max-w-screen-lg mx-auto">
       <CardHeader>
         <CardTitle>Vehicle Information</CardTitle>
       </CardHeader>

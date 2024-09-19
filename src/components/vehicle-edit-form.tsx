@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
 import { Checkbox } from "~/components/ui/checkbox"
@@ -11,13 +11,29 @@ import { Label } from "~/components/ui/label"
 //API
 import { api } from '~/trpc/react'
 
+
 export default function VehicleEditForm({ stockNumProp }: { stockNumProp: string }) {
+  //Calling all vehicle data and relations
+  const { data: vehicleData, isLoading: vehicleLoading } = api.editRouter.getVehicleByStockNum.useQuery({ stockNum: stockNumProp });
+  const { data: reconData } = api.editRouter.getReconByStockNum.useQuery({ stockNum: stockNumProp });
+  const { data: internetData } = api.editRouter.getInternetByStockNum.useQuery({ stockNum: stockNumProp });
+
+  //Calling all locations
+  const { data: workshopData } = api.editRouter.getAllWorkshops.useQuery();
+  const { data: pannelBeaterData } = api.editRouter.getAllPannelBeaters.useQuery();
+  const { data: interiorRepairData } = api.editRouter.getAllInteriorRepairers.useQuery();
+  const { data: valetData } = api.editRouter.getAllValets.useQuery();
+
+  //Calling all update mutations
+  const { mutate: vehicleMutation } = api.editRouter.updateVehicle.useMutation()
+  const { mutate: internetMutation } = api.editRouter.updateInternet.useMutation()
+
+
   // Vehicle Information State
-  const [stockNum, setStockNum] = useState('')
-  const [vin, setVin] = useState('')
+  const [vin, setVin] = useState("")
   const [mmCode, setMmCode] = useState(0)
-  const [registration, setRegistration] = useState('')
-  const [model, setModel] = useState('')
+  const [registration, setRegistration] = useState("")
+  const [model, setModel] = useState("")
   const [odometer, setOdometer] = useState(0)
   const [standInValue, setStandInValue] = useState(0)
   const [internetPrice, setInternetPrice] = useState(0)
@@ -42,26 +58,36 @@ export default function VehicleEditForm({ stockNumProp }: { stockNumProp: string
   const [onPMGUsed, setOnPMGUsed] = useState(false)
   const [onWhatsapp, setOnWhatsapp] = useState(false)
   const [onPinnacle, setOnPinnacle] = useState(false)
-
-  //Calling all vehicle data and relations
-  const { data: vehicleData } = api.editRouter.getVehicleByStockNum.useQuery({ stockNum: stockNumProp });
-  const { data: reconData } = api.editRouter.getReconByStockNum.useQuery({ stockNum: stockNumProp });
-  const { data: internetData } = api.editRouter.getInternetByStockNum.useQuery({ stockNum: stockNumProp });
+  // const [loadButtonPressed, setLoadButtonPressed] = useState(false)
 
 
-  //Calling all locations
-  const { data: workshopData } = api.editRouter.getAllWorkshops.useQuery();
-  const { data: pannelBeaterData } = api.editRouter.getAllPannelBeaters.useQuery();
-  const { data: interiorRepairData } = api.editRouter.getAllInteriorRepairers.useQuery();
-  const { data: valetData } = api.editRouter.getAllValets.useQuery();
+  if (!vehicleData || !reconData || !internetData || !workshopData || !pannelBeaterData || !interiorRepairData || !valetData || vehicleLoading) return <>Loading...</>
 
 
-  if (!vehicleData || !reconData || !internetData || !workshopData || !pannelBeaterData || !interiorRepairData || !valetData) return <>Loading...</>
-
+  // const initVehicleValues = () => {
+  //   setVin(vehicleData.VIN || "")
+  //   setMmCode(vehicleData.MMCode || 0)
+  //   setRegistration(vehicleData.Registration || "")
+  //   setModel(vehicleData.Model || "")
+  //   setOdometer(vehicleData.Odometer || 0)
+  //   setStandInValue(vehicleData.StandInValue || 0)
+  //   setInternetPrice(vehicleData.InternetPrice || 0)
+  // }
 
   const handleVehicleSave = () => {
-    console.log('Saving Vehicle Information', {
-      stockNum, vin, mmCode, registration, model, odometer, standInValue, internetPrice
+
+    const handledString = (inputString: string, dbString: string | null) => {
+      if ((inputString == "" || inputString == null) && dbString != null) return dbString
+      return inputString
+    }
+
+    const handledNumber = (dataNumber: number, dbNumber: number | null) => {
+      if ((dataNumber == 0 || dataNumber == null) && dbNumber != null) return dbNumber
+      return dataNumber
+    }
+
+    vehicleMutation({
+      stockNum: stockNumProp, VIN: handledString(vin, vehicleData?.VIN), MMCode: handledNumber(mmCode, vehicleData?.MMCode), Model: handledString(model, vehicleData?.Model), Registration: handledString(registration, vehicleData?.Registration), Odometer: handledNumber(odometer, vehicleData?.Odometer), StandInValue: handledNumber(standInValue, vehicleData?.StandInValue), InternetPrice: handledNumber(internetPrice, vehicleData?.InternetPrice)
     })
   }
 
@@ -72,10 +98,17 @@ export default function VehicleEditForm({ stockNumProp }: { stockNumProp: string
   }
 
   const handleInternetSave = () => {
-    console.log('Saving Internet States', {
-      picsTaken, picsOnPc, onAutoTrader, onCars, onPMGUsed, onWhatsapp, onPinnacle
+    internetMutation({
+      StockNum: stockNumProp, PicsTaken: picsTaken, PicsOnPc: picsOnPc, OnAutoTrader: onAutoTrader, OnCars: onCars, OnPMGUsed: onPMGUsed, OnWhatsapp: onWhatsapp, OnPinnacle: onPinnacle
     })
   }
+
+
+  // if (!loadButtonPressed) return <Button onClick={() => {
+  //   initVehicleValues()
+  //   setLoadButtonPressed(true)
+  // }
+  // }>Load Recon States (Press this as soon as you open page!!!)</Button>
 
 
   return (
@@ -88,11 +121,11 @@ export default function VehicleEditForm({ stockNumProp }: { stockNumProp: string
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="StockNum">Stock Number</Label>
-              <Input id="StockNum" placeholder={vehicleData.StockNum} value={stockNum} onChange={(e) => setStockNum(e.target.value)} />
+              <Input id="StockNum" placeholder={vehicleData?.StockNum} value={stockNumProp} readOnly />
             </div>
             <div className="space-y-2">
               <Label htmlFor="VIN">VIN</Label>
-              <Input id="VIN" placeholder={vehicleData.VIN || ""} value={vin} onChange={(e) => setVin(e.target.value)} />
+              <Input id="VIN" placeholder={vehicleData?.VIN || ""} onChange={(e) => setVin(e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="MMCode">MM Code</Label>
@@ -100,23 +133,23 @@ export default function VehicleEditForm({ stockNumProp }: { stockNumProp: string
             </div>
             <div className="space-y-2">
               <Label htmlFor="Registration">Registration</Label>
-              <Input id="Registration" placeholder={vehicleData.Registration?.toString()} value={registration} onChange={(e) => setRegistration(e.target.value)} />
+              <Input id="Registration" placeholder={vehicleData?.Registration?.toString()} onChange={(e) => setRegistration(e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="Model">Model</Label>
-              <Input id="Model" placeholder={vehicleData.Model || ""} value={model} onChange={(e) => setModel(e.target.value)} />
+              <Input id="Model" placeholder={vehicleData?.Model || ""} onChange={(e) => setModel(e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="Odometer">Odometer</Label>
-              <Input id="Odometer" placeholder={vehicleData.Odometer?.toString()} type="number" onChange={(e) => setOdometer(parseInt(e.target.value))} />
+              <Input id="Odometer" placeholder={vehicleData?.Odometer?.toString()} type="number" onChange={(e) => setOdometer(parseInt(e.target.value))} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="StandInValue">Stand In Value</Label>
-              <Input id="StandInValue" placeholder={vehicleData.StandInValue?.toString()} type="number" onChange={(e) => setStandInValue(parseInt(e.target.value))} />
+              <Input id="StandInValue" placeholder={vehicleData?.StandInValue?.toString()} type="number" onChange={(e) => setStandInValue(parseInt(e.target.value))} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="InternetPrice">Internet Price</Label>
-              <Input id="InternetPrice" placeholder={vehicleData.InternetPrice?.toString()} type="number" onChange={(e) => setInternetPrice(parseInt(e.target.value))} />
+              <Input id="InternetPrice" placeholder={vehicleData?.InternetPrice?.toString()} type="number" onChange={(e) => setInternetPrice(parseInt(e.target.value))} />
             </div>
           </div>
         </CardContent>
@@ -133,15 +166,18 @@ export default function VehicleEditForm({ stockNumProp }: { stockNumProp: string
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="Workshop">Workshop</Label>
-              <Select value={`${reconData.WorkshopID}`} onValueChange={e => {
+              <Select value={`${reconData?.WorkshopID}`} onValueChange={e => {
                 setWorkshop(parseInt(e))
               }}>
                 <SelectTrigger id="Workshop">
                   <SelectValue placeholder="Select Workshop" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">Workshop 1</SelectItem>
-                  <SelectItem value="2">Workshop 2</SelectItem>
+                  {workshopData?.map(e => {
+                    return (
+                      <SelectItem key={`${e.WorkshopID}`} value={`${e.WorkshopID}`}>{e.WorkshopName}</SelectItem>
+                    )
+                  })}
                 </SelectContent>
               </Select>
             </div>
@@ -153,15 +189,18 @@ export default function VehicleEditForm({ stockNumProp }: { stockNumProp: string
             </div>
             <div className="space-y-2">
               <Label htmlFor="PanelBeater">Panel Beater</Label>
-              <Select value={`${reconData.PannelBeaterID}`} onValueChange={e => {
+              <Select value={`${reconData?.PannelBeaterID}`} onValueChange={e => {
                 setPanelBeater(parseInt(e))
               }}>
                 <SelectTrigger id="PanelBeater">
                   <SelectValue placeholder="Select Panel Beater" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">Panel Beater 1</SelectItem>
-                  <SelectItem value="2">Panel Beater 2</SelectItem>
+                  {pannelBeaterData?.map(e => {
+                    return (
+                      <SelectItem key={`${e.PannelBeaterID}`} value={`${e.PannelBeaterID}`}>{e.PannelBeaterName}</SelectItem>
+                    )
+                  })}
                 </SelectContent>
               </Select>
             </div>
@@ -173,15 +212,18 @@ export default function VehicleEditForm({ stockNumProp }: { stockNumProp: string
             </div>
             <div className="space-y-2">
               <Label htmlFor="InteriorRepairer">Interior Repairer</Label>
-              <Select value={`${reconData.InteriorRepairerID}`} onValueChange={e => {
+              <Select value={`${reconData?.InteriorRepairerID}`} onValueChange={e => {
                 setInteriorRepairer(parseInt(e))
               }}>
                 <SelectTrigger id="InteriorRepairer">
                   <SelectValue placeholder="Select Interior Repairer" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">Interior Repairer 1</SelectItem>
-                  <SelectItem value="2">Interior Repairer 2</SelectItem>
+                  {interiorRepairData?.map(e => {
+                    return (
+                      <SelectItem key={`${e.InteriorRepairerID}`} value={`${e.InteriorRepairerID}`}>{e.InteriorRepairerName}</SelectItem>
+                    )
+                  })}
                 </SelectContent>
               </Select>
             </div>
@@ -193,14 +235,14 @@ export default function VehicleEditForm({ stockNumProp }: { stockNumProp: string
             </div>
             <div className="space-y-2">
               <Label htmlFor="Valet">Valet</Label>
-              <Select value={`${reconData.ValetID}`} onValueChange={e => {
+              <Select value={`${reconData?.ValetID}`} onValueChange={e => {
                 setValet(parseInt(e))
               }}>
                 <SelectTrigger id="Valet">
                   <SelectValue placeholder="Select Valet" />
                 </SelectTrigger>
                 <SelectContent>
-                  {valetData.map(e => {
+                  {valetData?.map(e => {
                     return (
                       <SelectItem key={`${e.ValetID}`} value={`${e.ValetID}`}>{e.ValetName}</SelectItem>
                     )
@@ -235,31 +277,34 @@ export default function VehicleEditForm({ stockNumProp }: { stockNumProp: string
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
             <div className="flex items-center space-x-2">
-              <Checkbox id="PicsTaken" checked={picsTaken} onCheckedChange={() => setPicsTaken(!picsTaken)} />
+              <Checkbox id="PicsTaken" defaultChecked={internetData?.PicsTaken} onCheckedChange={() => {
+                console.log(picsTaken)
+                setPicsTaken(!picsTaken)
+              }} />
               <Label htmlFor="PicsTaken">Pictures Taken</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <Checkbox id="PicsOnPc" checked={picsOnPc} onCheckedChange={() => setPicsOnPc(!picsOnPc)} />
+              <Checkbox id="PicsOnPc" defaultChecked={internetData?.PicsOnPc} onCheckedChange={() => setPicsOnPc(!picsOnPc)} />
               <Label htmlFor="PicsOnPc">Pictures on PC</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <Checkbox id="OnAutoTrader" checked={onAutoTrader} onCheckedChange={() => setOnAutoTrader(!onAutoTrader)} />
+              <Checkbox id="OnAutoTrader" defaultChecked={internetData?.OnAutoTrader} onCheckedChange={() => setOnAutoTrader(!onAutoTrader)} />
               <Label htmlFor="OnAutoTrader">On AutoTrader</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <Checkbox id="OnCars" checked={onCars} onCheckedChange={() => setOnCars(!onCars)} />
+              <Checkbox id="OnCars" defaultChecked={internetData?.OnCars} onCheckedChange={() => setOnCars(!onCars)} />
               <Label htmlFor="OnCars">On Cars</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <Checkbox id="OnPMGUsed" checked={onPMGUsed} onCheckedChange={() => setOnPMGUsed(!onPMGUsed)} />
+              <Checkbox id="OnPMGUsed" defaultChecked={internetData?.OnPMGUsed} onCheckedChange={() => setOnPMGUsed(!onPMGUsed)} />
               <Label htmlFor="OnPMGUsed">On PMG Used</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <Checkbox id="OnWhatsapp" checked={onWhatsapp} onCheckedChange={() => setOnWhatsapp(!onWhatsapp)} />
+              <Checkbox id="OnWhatsapp" defaultChecked={internetData?.OnWhatsapp} onCheckedChange={() => setOnWhatsapp(!onWhatsapp)} />
               <Label htmlFor="OnWhatsapp">On Whatsapp</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <Checkbox id="OnPinnacle" checked={onPinnacle} onCheckedChange={() => setOnPinnacle(!onPinnacle)} />
+              <Checkbox id="OnPinnacle" defaultChecked={internetData?.OnPinnacle} onCheckedChange={() => setOnPinnacle(!onPinnacle)} />
               <Label htmlFor="OnPinnacle">On Pinnacle</Label>
             </div>
           </div>

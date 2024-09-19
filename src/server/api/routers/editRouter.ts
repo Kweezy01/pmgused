@@ -12,7 +12,7 @@ export const editRouter = createTRPCRouter({
       return vehicle;
     }),
 
-    getReconByStockNum: publicProcedure
+  getReconByStockNum: publicProcedure
     .input(z.object({ stockNum: z.string() }))
     .query(async ({ ctx, input }) => {
       const vehicle = await ctx.db.reconStates.findUnique({
@@ -21,7 +21,7 @@ export const editRouter = createTRPCRouter({
       return vehicle;
     }),
 
-    getInternetByStockNum: publicProcedure
+  getInternetByStockNum: publicProcedure
     .input(z.object({ stockNum: z.string() }))
     .query(async ({ ctx, input }) => {
       const vehicle = await ctx.db.internetStates.findUnique({
@@ -34,9 +34,10 @@ export const editRouter = createTRPCRouter({
 
     publicProcedure
       .input(z.object({
-        stockNum: z.string().min(1),
-        VIN: z.string().min(1),
-        Model: z.string().min(1),
+        stockNum: z.string(),
+        VIN: z.string(),
+        Registration: z.string(),
+        Model: z.string(),
         MMCode: z.number(),
         Odometer: z.number(),
         StandInValue: z.number(),
@@ -49,6 +50,7 @@ export const editRouter = createTRPCRouter({
           },
           data: {
             VIN: input.VIN,
+            Registration: input.Registration,
             Model: input.Model,
             MMCode: input.MMCode,
             Odometer: input.Odometer,
@@ -90,6 +92,36 @@ export const editRouter = createTRPCRouter({
           },
         });
       }),
+
+  updateInternet:
+
+    publicProcedure
+      .input(z.object({
+        StockNum: z.string().min(1),
+        PicsTaken: z.boolean(),
+        PicsOnPc: z.boolean(),
+        OnAutoTrader: z.boolean(),
+        OnCars: z.boolean(),
+        OnPMGUsed: z.boolean(),
+        OnWhatsapp: z.boolean(),
+        OnPinnacle: z.boolean(),
+      })).mutation(async ({ ctx, input }) => {
+        await ctx.db.internetStates.update({
+          where: {
+            StockNum: input.StockNum,
+          },
+          data: {
+            PicsTaken: input.PicsTaken,
+            PicsOnPc: input.PicsOnPc,
+            OnAutoTrader: input.OnAutoTrader,
+            OnCars: input.OnCars,
+            OnPMGUsed: input.OnPMGUsed,
+            OnWhatsapp: input.OnWhatsapp,
+            OnPinnacle: input.OnPinnacle,
+          },
+        });
+      }),
+
 
   // updateAll: publicProcedure
   //   .input(
